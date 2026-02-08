@@ -1,5 +1,4 @@
-
-Given a sorted array of n integers, remove duplicates in-place. Print only unique elements in order.
+ Write a recursive function fib(n) to compute the n-th Fibonacci number where fib(0)=0 and fib(1)=1.
 #include <stdio.h>
 
 // Recursive function to find Fibonacci number
