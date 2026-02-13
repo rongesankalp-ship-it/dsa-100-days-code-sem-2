@@ -1,0 +1,39 @@
+A secret system stores code names in forward order. To display them in mirror format, you must transform the given code name so that its characters appear in the opposite order.
+#include <stdio.h>
+
+int main() {
+    int n;
+
+    // Input size (since symmetric matrix must be square)
+    scanf("%d", &n);
+
+    int matrix[n][n];
+
+    // Input matrix elements
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &matrix[i][j]);
+        }
+    }
+
+    int isSymmetric = 1;
+
+    // Check symmetric condition
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (matrix[i][j] != matrix[j][i]) {
+                isSymmetric = 0;
+                break;
+            }
+        }
+        if (!isSymmetric)
+            break;
+    }
+
+    if (isSymmetric)
+        printf("YES");
+    else
+        printf("NO");
+
+    return 0;
+}
