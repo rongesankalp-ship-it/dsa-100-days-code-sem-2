@@ -1,0 +1,86 @@
+Find Intersection Point of Two Linked Lists - Implement using linked list with dynamic memory allocation.
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Function to create new node
+struct Node* newNode(int data) {
+    struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
+    temp->data = data;
+    temp->next = NULL;
+    return temp;
+}
+
+// Function to get length of linked list
+int getLength(struct Node* head) {
+    int count = 0;
+    while (head != NULL) {
+        count++;
+        head = head->next;
+    }
+    return count;
+}
+
+// Function to find intersection point
+int getIntersectionNode(struct Node* head1, struct Node* head2) {
+    int len1 = getLength(head1);
+    int len2 = getLength(head2);
+
+    int diff;
+    struct Node *longList, *shortList;
+
+    if (len1 > len2) {
+        diff = len1 - len2;
+        longList = head1;
+        shortList = head2;
+    } else {
+        diff = len2 - len1;
+        longList = head2;
+        shortList = head1;
+    }
+
+    // Move long list pointer ahead by diff
+    for (int i = 0; i < diff; i++)
+        longList = longList->next;
+
+    // Traverse together
+    while (longList != NULL && shortList != NULL) {
+        if (longList == shortList)
+            return longList->data;
+
+        longList = longList->next;
+        shortList = shortList->next;
+    }
+
+    return -1;  // No intersection
+}
+
+int main() {
+
+    // Create common part
+    struct Node* common = newNode(30);
+    common->next = newNode(40);
+    common->next->next = newNode(50);
+
+    // First linked list: 10 -> 20 -> 30 -> 40 -> 50
+    struct Node* head1 = newNode(10);
+    head1->next = newNode(20);
+    head1->next->next = common;
+
+    // Second linked list: 15 -> 30 -> 40 -> 50
+    struct Node* head2 = newNode(15);
+    head2->next = common;
+
+    int intersection = getIntersectionNode(head1, head2);
+
+    if (intersection != -1)
+        printf("Intersection Point: %d\n", intersection);
+    else
+        printf("No Intersection\n");
+
+    return 0;
+}
