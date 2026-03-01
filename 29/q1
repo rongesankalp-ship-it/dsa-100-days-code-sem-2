@@ -1,0 +1,81 @@
+Rotate Linked List Right by k Places - Implement using linked list with dynamic memory allocation.
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Create new node
+struct Node* newNode(int data) {
+    struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
+    temp->data = data;
+    temp->next = NULL;
+    return temp;
+}
+
+// Function to rotate list right by k places
+struct Node* rotateRight(struct Node* head, int k) {
+    if (head == NULL || head->next == NULL || k == 0)
+        return head;
+
+    struct Node* temp = head;
+    int length = 1;
+
+    // Find length and last node
+    while (temp->next != NULL) {
+        temp = temp->next;
+        length++;
+    }
+
+    // Make it circular
+    temp->next = head;
+
+    // Reduce k
+    k = k % length;
+
+    int stepsToNewHead = length - k;
+
+    struct Node* newTail = head;
+
+    // Move to new tail
+    for (int i = 1; i < stepsToNewHead; i++)
+        newTail = newTail->next;
+
+    struct Node* newHead = newTail->next;
+
+    // Break the circle
+    newTail->next = NULL;
+
+    return newHead;
+}
+
+// Function to print list
+void printList(struct Node* head) {
+    while (head != NULL) {
+        printf("%d ", head->data);
+        head = head->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    struct Node* head = newNode(1);
+    head->next = newNode(2);
+    head->next->next = newNode(3);
+    head->next->next->next = newNode(4);
+    head->next->next->next->next = newNode(5);
+
+    int k = 2;
+
+    printf("Original List: ");
+    printList(head);
+
+    head = rotateRight(head, k);
+
+    printf("Rotated List: ");
+    printList(head);
+
+    return 0;
+}
