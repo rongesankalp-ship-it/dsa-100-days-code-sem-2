@@ -1,0 +1,80 @@
+ Circular Queue Using Array - Implement using linked list with dynamic memory allocation.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int data;
+    struct node *next;
+};
+
+struct node *front = NULL, *rear = NULL;
+
+void enqueue(int value) {
+    struct node *newnode;
+    newnode = (struct node*)malloc(sizeof(struct node));
+    newnode->data = value;
+
+    if(front == NULL) {
+        front = rear = newnode;
+        rear->next = front;
+    }
+    else {
+        rear->next = newnode;
+        rear = newnode;
+        rear->next = front;
+    }
+}
+
+void dequeue() {
+    struct node *temp;
+
+    if(front == NULL) {
+        printf("Queue Underflow\n");
+        return;
+    }
+
+    if(front == rear) {
+        temp = front;
+        front = rear = NULL;
+        free(temp);
+    }
+    else {
+        temp = front;
+        front = front->next;
+        rear->next = front;
+        free(temp);
+    }
+}
+
+void display() {
+    struct node *temp;
+
+    if(front == NULL) {
+        printf("Queue is Empty\n");
+        return;
+    }
+
+    temp = front;
+    do {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    } while(temp != front);
+
+    printf("\n");
+}
+
+int main() {
+    enqueue(10);
+    enqueue(20);
+    enqueue(30);
+
+    printf("Queue elements: ");
+    display();
+
+    dequeue();
+    printf("After deletion: ");
+    display();
+
+    return 0;
+}
