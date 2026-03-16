@@ -1,0 +1,119 @@
+ Deque (Double-Ended Queue)
+
+A Deque is a linear data structure that allows insertion and deletion of elements from both the front and the rear. It provides more flexibility than a standard queue or stack.
+
+
+
+Input:
+- Sequence of deque operations with values (if applicable)
+
+
+#include <stdio.h>
+#define MAX 100
+
+int deque[MAX];
+int front = -1;
+int rear = -1;
+
+void push_front(int value)
+{
+    if(front == 0)
+    {
+        printf("Overflow\n");
+        return;
+    }
+
+    if(front == -1)
+    {
+        front = rear = 0;
+    }
+    else
+    {
+        front--;
+    }
+
+    deque[front] = value;
+}
+
+void push_back(int value)
+{
+    if(rear == MAX-1)
+    {
+        printf("Overflow\n");
+        return;
+    }
+
+    if(front == -1)
+    {
+        front = rear = 0;
+    }
+    else
+    {
+        rear++;
+    }
+
+    deque[rear] = value;
+}
+
+void pop_front()
+{
+    if(front == -1)
+    {
+        printf("Underflow\n");
+        return;
+    }
+
+    printf("Deleted element: %d\n", deque[front]);
+    front++;
+
+    if(front > rear)
+        front = rear = -1;
+}
+
+void pop_back()
+{
+    if(rear == -1)
+    {
+        printf("Underflow\n");
+        return;
+    }
+
+    printf("Deleted element: %d\n", deque[rear]);
+    rear--;
+
+    if(front > rear)
+        front = rear = -1;
+}
+
+void display()
+{
+    if(front == -1)
+    {
+        printf("Deque is empty\n");
+        return;
+    }
+
+    printf("Deque elements: ");
+    for(int i = front; i <= rear; i++)
+    {
+        printf("%d ", deque[i]);
+    }
+    printf("\n");
+}
+
+int main()
+{
+    push_back(10);
+    push_back(20);
+    push_front(5);
+
+    display();
+
+    pop_back();
+    display();
+
+    pop_front();
+    display();
+
+    return 0;
+}
