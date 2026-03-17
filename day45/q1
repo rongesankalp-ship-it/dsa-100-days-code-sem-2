@@ -1,0 +1,50 @@
+Find the height (maximum depth) of a given binary tree.
+#include <stdio.h>
+#include <stdlib.h>
+
+// Definition of Tree Node
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+// Function to create a new node
+struct Node* newNode(int val) {
+    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
+    node->data = val;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+// Function to find height of binary tree
+int maxDepth(struct Node* root) {
+    if (root == NULL)
+        return 0;
+
+    int leftHeight = maxDepth(root->left);
+    int rightHeight = maxDepth(root->right);
+
+    return 1 + (leftHeight > rightHeight ? leftHeight : rightHeight);
+}
+
+// Driver code
+int main() {
+    /*
+            1
+           / \
+          2   3
+         /
+        4
+    */
+
+    struct Node* root = newNode(1);
+    root->left = newNode(2);
+    root->right = newNode(3);
+    root->left->left = newNode(4);
+
+    printf("Height of tree: %d\n", maxDepth(root));
+
+    return 0;
+}
