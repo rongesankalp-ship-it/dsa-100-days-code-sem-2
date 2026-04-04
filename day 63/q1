@@ -1,0 +1,69 @@
+Problem: Perform DFS starting from a given source vertex using recursion.
+
+Input:
+- n
+- adjacency list
+- starting vertex s
+
+Output:
+- DFS traversal order
+
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// DFS function
+void dfs(int node, int n, int **adj, int *visited) {
+    visited[node] = 1;
+
+    // Print current node
+    printf("%d ", node);
+
+    // Visit all adjacent nodes
+    for (int i = 0; i < n; i++) {
+        if (adj[node][i] == 1 && visited[i] == 0) {
+            dfs(i, n, adj, visited);
+        }
+    }
+}
+
+int main() {
+    int n;
+
+    // Input number of vertices
+    scanf("%d", &n);
+
+    // Allocate adjacency matrix
+    int **adj = (int **)malloc(n * sizeof(int *));
+    for (int i = 0; i < n; i++) {
+        adj[i] = (int *)malloc(n * sizeof(int));
+    }
+
+    // Input adjacency matrix
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &adj[i][j]);
+        }
+    }
+
+    int s;
+    scanf("%d", &s); // starting vertex
+
+    // Visited array
+    int *visited = (int *)calloc(n, sizeof(int));
+
+    // Perform DFS
+    dfs(s, n, adj, visited);
+
+    // Free memory
+    for (int i = 0; i < n; i++) {
+        free(adj[i]);
+    }
+    free(adj);
+    free(visited);
+
+    return 0;
+}
