@@ -1,0 +1,132 @@
+Problem: Given meeting intervals, find minimum number of rooms required.
+Sort by start time and use min-heap on end times.
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Structure for intervals
+typedef struct {
+    int start;
+    int end;
+} Interval;
+
+// ---------- Min Heap Functions ----------
+
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Heapify up
+void heapifyUp(int heap[], int index) {
+    while (index > 0) {
+        int parent = (index - 1) / 2;
+
+        if (heap[parent] > heap[index]) {
+            swap(&heap[parent], &heap[index]);
+            index = parent;
+        } else {
+            break;
+        }
+    }
+}
+
+// Heapify down
+void heapifyDown(int heap[], int size, int index) {
+    int smallest = index;
+    int left = 2 * index + 1;
+    int right = 2 * index + 2;
+
+    if (left < size && heap[left] < heap[smallest])
+        smallest = left;
+
+    if (right < size && heap[right] < heap[smallest])
+        smallest = right;
+
+    if (smallest != index) {
+        swap(&heap[smallest], &heap[index]);
+        heapifyDown(heap, size, smallest);
+    }
+}
+
+// Insert into min heap
+void insertHeap(int heap[], int *size, int value) {
+    heap[*size] = value;
+    heapifyUp(heap, *size);
+    (*size)++;
+}
+
+// Remove minimum element
+void removeMin(int heap[], int *size) {
+    heap[0] = heap[*size - 1];
+    (*size)--;
+
+    heapifyDown(heap, *size, 0);
+}
+
+// ---------- Sorting by start time ----------
+
+int compare(const void *a, const void *b) {
+    Interval *i1 = (Interval *)a;
+    Interval *i2 = (Interval *)b;
+
+    return i1->start - i2->start;
+}
+
+// ---------- Main Function ----------
+
+int minMeetingRooms(Interval intervals[], int n) {
+
+    // Sort intervals by start time
+    qsort(intervals, n, sizeof(Interval), compare);
+
+    int heap[n];
+    int heapSize = 0;
+
+    // First meeting room
+    insertHeap(heap, &heapSize, intervals[0].end);
+
+    int maxRooms = 1;
+
+    for (int i = 1; i < n; i++) {
+
+        // If room becomes free
+        if (intervals[i].start >= heap[0]) {
+            removeMin(heap, &heapSize);
+        }
+
+        // Allocate room
+        insertHeap(heap, &heapSize, intervals[i].end);
+
+        // Update maximum rooms
+        if (heapSize > maxRooms)
+            maxRooms = heapSize;
+    }
+
+    return maxRooms;
+}
+
+int main() {
+
+    int n;
+
+    printf("Enter number of meetings: ");
+    scanf("%d", &n);
+
+    Interval intervals[n];
+
+    printf("Enter start and end times:\n");
+
+    for (int i = 0; i < n; i++) {
+        scanf("%d %d", &intervals[i].start, &intervals[i].end);
+    }
+
+    int rooms = minMeetingRooms(intervals, n);
+
+    printf("Minimum meeting rooms required = %d\n", rooms);
+
+    return 0;
+}
