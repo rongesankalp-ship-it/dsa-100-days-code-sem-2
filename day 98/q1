@@ -1,0 +1,79 @@
+Problem: Given intervals, merge all overlapping ones.
+Sort first, then compare with previous.
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Structure for intervals
+struct Interval {
+    int start;
+    int end;
+};
+
+// Comparator function for sorting
+int compare(const void *a, const void *b) {
+    struct Interval *i1 = (struct Interval *)a;
+    struct Interval *i2 = (struct Interval *)b;
+
+    return i1->start - i2->start;
+}
+
+// Function to merge intervals
+void mergeIntervals(struct Interval arr[], int n) {
+    if (n <= 0)
+        return;
+
+    // Sort intervals by starting time
+    qsort(arr, n, sizeof(struct Interval), compare);
+
+    // Temporary array for merged intervals
+    struct Interval result[n];
+
+    int index = 0;
+
+    // First interval
+    result[index] = arr[0];
+
+    for (int i = 1; i < n; i++) {
+
+        // If intervals overlap
+        if (arr[i].start <= result[index].end) {
+
+            // Merge intervals
+            if (arr[i].end > result[index].end)
+                result[index].end = arr[i].end;
+        }
+        else {
+            // Move to next interval
+            index++;
+            result[index] = arr[i];
+        }
+    }
+
+    // Print merged intervals
+    printf("Merged Intervals:\n");
+
+    for (int i = 0; i <= index; i++) {
+        printf("[%d, %d]\n", result[i].start, result[i].end);
+    }
+}
+
+int main() {
+    int n;
+
+    printf("Enter number of intervals: ");
+    scanf("%d", &n);
+
+    struct Interval arr[n];
+
+    printf("Enter intervals (start end):\n");
+
+    for (int i = 0; i < n; i++) {
+        scanf("%d %d", &arr[i].start, &arr[i].end);
+    }
+
+    mergeIntervals(arr, n);
+
+    return 0;
+}
